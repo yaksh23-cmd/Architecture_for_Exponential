@@ -324,7 +324,7 @@ module multiplication_16(
 
     assign zero = (mantissa == 0 && exponent == 0);
 
-    // ✅ Only assert these if no Exception
+    //  Only assert these if no Exception
     assign Overflow = ~Exception & (base_exponent[5] & ~base_exponent[4]) & ~zero;
     assign Underflow = ~Exception & (base_exponent[5] & base_exponent[4]) & ~zero;
 
