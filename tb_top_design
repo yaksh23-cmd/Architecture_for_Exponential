@@ -1,0 +1,52 @@
+// Code your testbench here
+// or browse Examples
+`timescale 1ns / 1ps
+
+module tb_top_design;
+
+  // Inputs
+  reg [15:0] in;
+
+  // Outputs
+  wire [15:0] out;
+  wire [15:0] final_int;
+  wire [15:0] result_mult;
+
+  // Instantiate the top design
+  top_design uut (
+    .in(in),
+    .out(out),
+    .final_int(final_int),
+    .result_mult(result_mult)
+  );
+
+  // Task to display half-precision input and output in hex
+  task display_result;
+    input [15:0] input_val;
+    begin
+      in = input_val;
+      #20; // wait for combinational propagation
+      $display("Input (half) = 0x%h => Output (e^x half) = 0x%h  mul = 0x%h int = 0x%h", input_val, out,result_mult,final_int);
+    end
+  endtask
+
+  initial begin
+    $display("---- Testing e^x computation with positive half-precision inputs ----");
+
+    // Apply positive half-precision inputs
+    // Format: 0 01111 0000000000 = 1.0 in half-precision
+    // Format: 0 01110 0000000000 = 0.5
+    // Format: 0 10000 0000000000 = 2.0
+    // Format: 0 10001 0000000000 = 4.0
+
+    display_result(16'b0_01110_0000000000); // 0.5
+    display_result(16'b0_01111_0000000000); // 1.0
+    display_result(16'b0_10000_0000000000); // 2.0
+    display_result(16'b0_10001_0000000000); // 4.0
+    display_result(16'b0_10010_0000000000); // 8.0
+
+    $display("---- Test completed ----");
+    $finish;
+  end
+
+endmodule
